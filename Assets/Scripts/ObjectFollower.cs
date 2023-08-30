@@ -14,7 +14,7 @@ public class ObjectFollower : MonoBehaviour
     private Rigidbody rb;
     private Vector3 projMGlobal;
 
-    [Tooltip("Fijo: La cámara se ubica a una distancia fija del objeto en los 3 ejes.\nMomentoLineal: la cámara se ubica a una distancia fija del objeto en un espacio esférico apuntando en la dirección de movimiento del objeto.\nLerp: Se utiliza un valor de lerp para seguir la posición y la rotación del objeto.")]
+    [Tooltip("Fijo: El seguidor se ubica a una distancia fija del objeto seguido en los 3 ejes.\nMomentoLineal: el seguido se ubica a una distancia fija del objeto seguido en un espacio esférico apuntando en la dirección de movimiento del objeto seguido.\nLerp: Se utiliza un valor de lerp para seguir la posición y la rotación del objeto.")]
     [SerializeField] private TipoSeguimiento tipoSeguimiento;
 
     [Space(8)]
@@ -22,21 +22,21 @@ public class ObjectFollower : MonoBehaviour
 
     [Space(15)]
     [Tooltip("Distancia al objeto")]
-    [SerializeField] private float cameraDistance = 1f;
+    [SerializeField] private float objectDistance = 1f;
 
-    [Tooltip("Angulo de declinación (Pitch) desde el cual se observa el objeto")]
+    [Tooltip("Angulo de declinación (Pitch) desde el cual se sigue al objeto")]
     [Range(-90f,90f)]
     [SerializeField] private float declinationAngle = 0f;
 
-    [Tooltip("Angulo de ascención de la cámara respecto al objeto")]
+    [Tooltip("Angulo de ascención del seguidor respecto al objeto seguido")]
     [Range(-70f,70f)]
     [SerializeField] private float ascensionAngle = 0f;
 
-    [Tooltip("Angulo de precesión de la cámara (Yaw) respecto al objeto")]
+    [Tooltip("Angulo de precesión del seguidor (Yaw) respecto al objeto seguido")]
     [Range(-45f,45f)]
     [SerializeField] private float precessionAngle = 0f;
 
-    [Tooltip("Offset vertical para la cámara")]
+    [Tooltip("Offset vertical para el seguidor")]
     [Range(0,5f)]
     [SerializeField] private float verticalOffset = 0f;
 
@@ -62,9 +62,9 @@ public class ObjectFollower : MonoBehaviour
         // Vector de proyección de M (momento lineal) sobre el plano horizontal de la escena
         projMGlobal = Vector3.ProjectOnPlane(rb.velocity, Vector3.up).normalized;
 
-        float  _x = cameraDistance*Mathf.Cos(declinationAngle * Mathf.Deg2Rad)*Mathf.Sin(ascensionAngle * Mathf.Deg2Rad);
-        float  _y = cameraDistance*Mathf.Sin(declinationAngle * Mathf.Deg2Rad);
-        float  _z = -cameraDistance*Mathf.Cos(declinationAngle * Mathf.Deg2Rad)*Mathf.Cos(ascensionAngle * Mathf.Deg2Rad);
+        float  _x = objectDistance*Mathf.Cos(declinationAngle * Mathf.Deg2Rad)*Mathf.Sin(ascensionAngle * Mathf.Deg2Rad);
+        float  _y = objectDistance*Mathf.Sin(declinationAngle * Mathf.Deg2Rad);
+        float  _z = -objectDistance*Mathf.Cos(declinationAngle * Mathf.Deg2Rad)*Mathf.Cos(ascensionAngle * Mathf.Deg2Rad);
         offset = new Vector3(_x, _y, _z);
 
         switch (tipoSeguimiento)
@@ -87,7 +87,7 @@ public class ObjectFollower : MonoBehaviour
                 break;
             case TipoSeguimiento.MomentoLineal:
                 tail.SetActive(false);
-                offset = new Vector3(0,cameraDistance*Mathf.Sin(declinationAngle * Mathf.Deg2Rad),0);
+                offset = new Vector3(0,objectDistance*Mathf.Sin(declinationAngle * Mathf.Deg2Rad),0);
                 tailSet = false;
                 break;
         }
@@ -103,22 +103,22 @@ public class ObjectFollower : MonoBehaviour
         switch (tipoSeguimiento)
         {
             case TipoSeguimiento.Fijo:
-                // Ubica la cámara según el offset
+                // Ubica el seguidor según el offset
                 transform.position = body.transform.position + offset;
-                // Giro de la cámara apuntando al objeto
+                // Giro del seguidor apuntando al objeto
                 transform.LookAt(body.transform.position);
-                // Desviación de la cámara
+                // Desviación del seguidor
                 transform.Rotate(new Vector3(0,precessionAngle,0));
                 transform.position = transform.position + new Vector3(0, verticalOffset, 0);
                 break;
             case TipoSeguimiento.MomentoLineal:
-                // Posición de la cámara en línea con el objeto en la dirección de M
-                transform.position = body.transform.position - cameraDistance * projMGlobal;
-                // Ubica la cámara según el offset
+                // Posición del seguidor en línea con el objeto seguido en la dirección de M
+                transform.position = body.transform.position - objectDistance * projMGlobal;
+                // Ubica l seguidor según el offset
                 transform.position = transform.position + offset;
-                // Giro de la cámara apuntando al objeto
+                // Giro del seguidor apuntando al objeto
                 transform.LookAt(body.transform.position);
-                // Desviación de la cámara
+                // Desviación del seguidor
                 transform.Rotate(new Vector3(0,precessionAngle,0));
                 break;
             case TipoSeguimiento.Lerp:
