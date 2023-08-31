@@ -12,7 +12,6 @@ public class ObjectFollower : MonoBehaviour
     [Tooltip("Objeto a seguir")]
     [SerializeField] private GameObject body;
     private Rigidbody rb;
-    private Vector3 projMGlobal;
 
     [Tooltip("Fijo: El seguidor se ubica a una distancia fija del objeto seguido en los 3 ejes.\nMomentoLineal: el seguido se ubica a una distancia fija del objeto seguido en un espacio esférico apuntando en la dirección de movimiento del objeto seguido.\nLerp: Se utiliza un valor de lerp para seguir la posición y la rotación del objeto.")]
     [SerializeField] private TipoSeguimiento tipoSeguimiento;
@@ -49,19 +48,15 @@ public class ObjectFollower : MonoBehaviour
     private bool tailSet;
     private Vector3 offset;
     private GameObject tail;
+    private Vector3 projMGlobal;
 
     void Start()
     {
         rb = body.GetComponent<Rigidbody>();
         projMGlobal = new Vector3(0,0,0);
-        tail = new GameObject("Tail");
-        tail.SetActive(false);
         tailSet = false;
     }
     void Update(){
-        // Vector de proyección de M (momento lineal) sobre el plano horizontal de la escena
-        projMGlobal = Vector3.ProjectOnPlane(rb.velocity, Vector3.up).normalized;
-
         float  _x = objectDistance*Mathf.Cos(declinationAngle * Mathf.Deg2Rad)*Mathf.Sin(ascensionAngle * Mathf.Deg2Rad);
         float  _y = objectDistance*Mathf.Sin(declinationAngle * Mathf.Deg2Rad);
         float  _z = -objectDistance*Mathf.Cos(declinationAngle * Mathf.Deg2Rad)*Mathf.Cos(ascensionAngle * Mathf.Deg2Rad);
@@ -70,12 +65,12 @@ public class ObjectFollower : MonoBehaviour
         switch (tipoSeguimiento)
         {
             case TipoSeguimiento.Fijo:
-                tail.SetActive(false);
                 tailSet = false;
                 break;
             case TipoSeguimiento.Lerp:
-                tail.SetActive(true);
                 if(!tailSet){
+                    tail = new GameObject("Tail");
+                    tail.SetActive(true);
                     tail.transform.position = body.transform.position + offset;
                     tail.transform.rotation = body.transform.rotation;
                     tail.transform.LookAt(body.transform.position);
@@ -86,6 +81,8 @@ public class ObjectFollower : MonoBehaviour
                 }                
                 break;
             case TipoSeguimiento.MomentoLineal:
+                // Vector de proyección de M (momento lineal) sobre el plano horizontal de la escena
+                projMGlobal = Vector3.ProjectOnPlane(rb.velocity, Vector3.up).normalized;
                 tail.SetActive(false);
                 offset = new Vector3(0,objectDistance*Mathf.Sin(declinationAngle * Mathf.Deg2Rad),0);
                 tailSet = false;

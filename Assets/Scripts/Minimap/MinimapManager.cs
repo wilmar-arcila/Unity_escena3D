@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,13 +26,18 @@ public class MinimapManager : MonoBehaviour
 
     private MinimapState minimapNextState;
 
+    //////////////////////////////////////////////
+    /*         OBSERVER PATTERN (as Publisher)  */
+    public event Action<int> MinimapChanged;
+    //////////////////////////////////////////////
+
     void Start()
     {
         minimap.SetActive(false);
         minimapNextState = MinimapState.ON1;
         minimapCam.gameObject.SetActive(false);
         minimapCamS.gameObject.SetActive(false);
-        //Falta cambiar el tamaño de los íconos
+        MinimapChanged?.Invoke(20);
     }
 
     void Update()
@@ -49,19 +55,19 @@ public class MinimapManager : MonoBehaviour
                     minimap.SetActive(true);
                     minimapCam.gameObject.SetActive(false);
                     minimapCamS.gameObject.SetActive(true);
-                    //Falta cambiar el tamaño de los íconos
+                    MinimapChanged?.Invoke(20);
                     minimapNextState = MinimapState.ON2;
                     break;
                 case MinimapState.ON2:
                     minimapCam.gameObject.SetActive(true);
                     minimapCamS.gameObject.SetActive(false);
                     follower.ShoulderOffset = new Vector3(0,100,0);
-                    //Falta cambiar el tamaño de los íconos
+                    MinimapChanged?.Invoke(10);
                     minimapNextState = MinimapState.ON3;
                     break;
                 case MinimapState.ON3:
                     follower.ShoulderOffset = new Vector3(0,50,0);
-                    //Falta cambiar el tamaño de los íconos
+                    MinimapChanged?.Invoke(5);
                     minimapNextState = MinimapState.OFF;
                     break;
             }
