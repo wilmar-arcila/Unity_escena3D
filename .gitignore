@@ -22,10 +22,16 @@
 
 # Paquetes gratuitos de la tienda de Assets de Unity
 /[Aa]ssets/Imports/AQUAS-Lite/Demo/
+/[Aa]ssets/Imports/AQUAS-Lite/Demo.meta
 /[Aa]ssets/Imports/AQUAS-Lite/Readme.txt
 /[Aa]ssets/Imports/Digger/Demo/
+/[Aa]ssets/Imports/Digger/Demo.meta
 /[Aa]ssets/Imports/Digger/Documentation.txt
 /[Aa]ssets/Imports/Digger/README.txt
+/[Aa]ssets/Imports/GeeKay3D/First-Aid-Set/Demo/
+/[Aa]ssets/Imports/GeeKay3D/First-Aid-Set/Demo.meta
+/[Aa]ssets/Imports/GeeKay3D/First-Aid-Set/Documentation/
+/[Aa]ssets/Imports/GeeKay3D/First-Aid-Set/Documentation.meta
 
 # TextMesh Pro Docs
 /[Aa]ssets/TextMesh\ Pro/Documentation/
