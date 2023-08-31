@@ -1,55 +1,67 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public enum MinimapState
 {
     OFF,  // Minimap Set Off
-    ON,   // Minimap Set On -> 1X zoom
-    ON5,  // Minimap Set On -> 5X zoom
-    ON10  // Minimap Set On -> 10X zoom
+    ON1,  // Minimap Set On -> CameraDistance:200, IconSize:20
+    ON2,  // Minimap Set On -> CameraDistance:100, IconSize:10
+    ON3   // Minimap Set On -> CameraDistance: 50, IconSize:5
 }
 public class MinimapManager : MonoBehaviour
 {
     [Header("Minimap UI")]
-    [Tooltip("Objeto Padre de los elementos UI del Minimap")]
+    [Tooltip("Objeto padre de los elementos UI del Minimap")]
     [SerializeField] private GameObject minimap;
 
-    [Header("Minimap Camera")]
-    [Tooltip("Camara con la vista del Minimap")]
-    [SerializeField] private Camera minimapCam;
+    [Header("Minimap Cameras")]
+    [Tooltip("Camara virtual (Cinemachine) con la vista de todo el terreno (Estática)")]
+    [SerializeField] private CinemachineVirtualCamera minimapCamS;
+
+    [Tooltip("Camara virtual (Cinemachine) con seguimiento de personaje")]
+    [SerializeField] private CinemachineVirtualCamera minimapCam;
 
     private MinimapState minimapNextState;
 
     void Start()
     {
         minimap.SetActive(false);
-        minimapNextState = MinimapState.ON;
-        minimapCam.enabled = false;
-        minimapCam.orthographic = true;
+        minimapNextState = MinimapState.ON1;
+        minimapCam.gameObject.SetActive(false);
+        minimapCamS.gameObject.SetActive(false);
+        //Falta cambiar el tamaño de los íconos
     }
 
     void Update()
     {
         if(Input.GetKeyDown("m")){
+            var follower = minimapCam.GetCinemachineComponent<Cinemachine3rdPersonFollow>();
             switch(minimapNextState){
                 case MinimapState.OFF:
                     minimap.SetActive(false);
-                    minimapCam.enabled = false;
-                    minimapNextState = MinimapState.ON;
+                    minimapCam.gameObject.SetActive(false);
+                    minimapCamS.gameObject.SetActive(false);
+                    minimapNextState = MinimapState.ON1;
                     break;
-                case MinimapState.ON:
+                case MinimapState.ON1:
                     minimap.SetActive(true);
-                    minimapCam.enabled = true;
-                    minimapCam.orthographicSize = 15.0f;
-                    minimapNextState = MinimapState.ON5;
+                    minimapCam.gameObject.SetActive(false);
+                    minimapCamS.gameObject.SetActive(true);
+                    //Falta cambiar el tamaño de los íconos
+                    minimapNextState = MinimapState.ON2;
                     break;
-                case MinimapState.ON5:
-                    minimapCam.orthographicSize = 10.0f;
-                    minimapNextState = MinimapState.ON10;
+                case MinimapState.ON2:
+                    minimapCam.gameObject.SetActive(true);
+                    minimapCamS.gameObject.SetActive(false);
+                    follower.ShoulderOffset = new Vector3(0,100,0);
+                    //Falta cambiar el tamaño de los íconos
+                    minimapNextState = MinimapState.ON3;
                     break;
-                case MinimapState.ON10:
-                    minimapCam.orthographicSize = 5.0f;
+                case MinimapState.ON3:
+                    follower.ShoulderOffset = new Vector3(0,50,0);
+                    //Falta cambiar el tamaño de los íconos
                     minimapNextState = MinimapState.OFF;
                     break;
             }
