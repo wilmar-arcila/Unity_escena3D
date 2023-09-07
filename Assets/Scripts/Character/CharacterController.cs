@@ -7,6 +7,7 @@ namespace Character.State
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(StatsManager))]
     public class CharacterController : MonoBehaviour
     {
         [Header("Movimiento del personaje")]
@@ -32,6 +33,7 @@ namespace Character.State
         private GameManager manager;
         private Rigidbody rb;
         private Animator animator;
+        private StatsManager stats;
 
         private float fallSensibility = 0.5f; // Alcanzada esta velocidad descendente se considera que el personaje está cayendo
 
@@ -39,6 +41,7 @@ namespace Character.State
         {
             animator = GetComponent<Animator>();
             rb = GetComponent<Rigidbody>();
+            stats = GetComponent<StatsManager>();
             stateMachine = new StateMachine(this);
         }
         
@@ -57,6 +60,13 @@ namespace Character.State
         private void OnCollisionEnter(Collision other) {
             if(other.collider.CompareTag("Ground")){
                 onTheGround = true;
+            }
+        }
+
+        private void OnTriggerEnter(Collider other) {
+            Debug.Log("TriggerEnter: " + other.gameObject.name);
+            if(other.CompareTag("Collectable")){
+                stats.RaiseScore(1);
             }
         }
 
