@@ -65,13 +65,16 @@ namespace Character.State
         }
 
         public void idle(){
-            animator.SetFloat("forward", 0);
+            animator.SetFloat("speed_LR", 0);
+            animator.SetFloat("speed_FR", 0);
             animator.SetTrigger("idle");
         }
 
-        public void move(float speedFR, float speedLR, float rotDir){
-            animator.SetFloat("forward", speedFR);
-            transform.Translate(speedLR*speed*Time.deltaTime,0,speedFR*speed*Time.deltaTime);
+        public void move(float speedLR, float speedFR, float rotDir){
+            animator.SetTrigger("move");
+            animator.SetFloat("speed_LR", speedLR);
+            animator.SetFloat("speed_FR", speedFR);
+            //transform.Translate(moveDirection*moveIntensity*speed*Time.deltaTime,0,moveIntensity*speed*Time.deltaTime);
             transform.Rotate(0,rotDir*rot*Time.deltaTime,0);
         }
 
@@ -83,13 +86,14 @@ namespace Character.State
 
         // ** Detector de movimiento descendente **
         public bool verifyFalling(){
-            if(rb.velocity.y < -fallSensibility){
+            /* if(rb.velocity.y < -fallSensibility){
                 animator.SetTrigger("fall");
                 return true;
             }
             else{
                 return false;
-            }
+            } */
+            return false;
         }
     }
 }

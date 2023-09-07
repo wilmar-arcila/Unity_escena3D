@@ -21,7 +21,7 @@ namespace Character.State
                 if(speedUD == 1 && controller.onTheGround){
                     controller.stateMachine.TransitionTo(controller.stateMachine.jumpState);
                 }
-                else if((speedFR != 0) || (speedLR !=0) || (rotDir !=0)){
+                else if((speedLR != 0) ||(speedFR != 0) || (rotDir !=0)){
                     controller.stateMachine.TransitionTo(controller.stateMachine.moveState);
                 }
                 

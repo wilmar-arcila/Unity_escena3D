@@ -5,6 +5,14 @@ using UnityEngine;
 namespace Character.State{
     public abstract class InteractionManager
     {
+        private const float moveIntensity_Static = 0f;
+        private const float moveIntensity_Walk = 0.5f;
+        private const float moveIntensity_Run = 1f;
+        private const float moveDirection_L = -1f;
+        private const float moveDirection_R = 1f;
+        private const float moveDirection_F = 1f;
+        private const float moveDirection_B = -1f;
+
         public float speedLR { get; private set; }
         public float speedFR { get; private set; }
         public float rotDir { get; private set; }
@@ -24,11 +32,13 @@ namespace Character.State{
             if(Input.GetKey("right")||Input.GetKey("left")) {
                 if(Input.GetKey("right")){
                     //mover a la derecha
-                    speedLR = 1;
+                    speedLR = moveDirection_R*moveIntensity_Walk;
+                    speedFR = moveIntensity_Static;
                 }
                 else{
                     //mover a la izquierda
-                    speedLR = -1;
+                    speedLR = moveDirection_L*moveIntensity_Walk;
+                    speedFR = moveIntensity_Static;
                 }
                 _interaction1 = true;
             }
@@ -41,26 +51,27 @@ namespace Character.State{
             if(Input.GetKey("up")||Input.GetKey("down")) {
                 if(Input.GetKey("up")){
                     //mover hacia adelante
-                    speedFR = 1;
+                    speedLR = moveIntensity_Static;
+                    speedFR = moveDirection_F*moveIntensity_Walk;
 
                 }
                 else{
                     //mover hacia atrás
-                    speedFR = -1;
+                    speedLR = moveIntensity_Static;
+                    speedFR = moveDirection_B*moveIntensity_Walk;
                 }
                 _interaction2 = true;
             }
             else
             {
                 _interaction2 = false;
-                speedFR = 0;
             }
 
             // Se verifica que el personaje deba saltar
             if(Input.GetKeyDown("space")){
                 //saltar
                 _interaction3 = true;
-                speedUD = 1;
+                speedUD = moveIntensity_Run;
             }
             else
             {
@@ -72,11 +83,11 @@ namespace Character.State{
             if(Input.GetKey("a")||Input.GetKey("d")){
                 _interaction4 = true;
                 if(Input.GetKey("a")){
-                    //rotar la cápsula a la izquierda
+                    //rotar a la izquierda
                     rotDir = -1;
                 }
                 else{
-                    //rotar la cápsula a la derecha
+                    //rotar a la derecha
                     rotDir = 1;
                 }
             }
@@ -85,7 +96,14 @@ namespace Character.State{
                 rotDir = 0;
             }
 
-            return _interaction1||_interaction2||_interaction3||_interaction4;
+            if(_interaction1||_interaction2||_interaction3||_interaction4){
+                return true;
+            }
+            else{
+                speedLR = moveIntensity_Static;
+                speedFR = moveIntensity_Static;
+                return false;
+            }
         }
     }
 }

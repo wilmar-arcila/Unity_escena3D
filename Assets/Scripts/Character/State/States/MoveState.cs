@@ -16,7 +16,7 @@ namespace Character.State
         }
         public void Update(){
             if(GetHumanInput()){
-                controller.move(speedFR, speedLR, rotDir);
+                controller.move(speedLR, speedFR, rotDir);
                 if(speedUD == 1 && controller.onTheGround){
                     controller.stateMachine.TransitionTo(controller.stateMachine.jumpState);
                 }
