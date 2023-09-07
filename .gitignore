@@ -32,6 +32,10 @@
 /[Aa]ssets/Imports/GeeKay3D/First-Aid-Set/Demo.meta
 /[Aa]ssets/Imports/GeeKay3D/First-Aid-Set/Documentation/
 /[Aa]ssets/Imports/GeeKay3D/First-Aid-Set/Documentation.meta
+/[Aa]ssets/Imports/ElectricalCabinet/Scene/
+/[Aa]ssets/Imports/SolarPanel/Assets/Scenes/
+/[Aa]ssets/Imports/SolarPanel/Documentation.*
+/[Aa]ssets/Imports/transformer_box/demo_scene*
 
 # TextMesh Pro Docs
 /[Aa]ssets/TextMesh\ Pro/Documentation/
